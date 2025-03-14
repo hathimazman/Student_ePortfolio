@@ -164,6 +164,6 @@ else:
         'OSPE': [6.5, 7.8, 5.9],
         'PAM': [12.5, 14.2, 11.8],
         'PBL': [8.5, 9.2, 7.8],
-        'Final Mark': [67.5, 72.4, 61.2]
+        'Final Mark': [63.1, 68.9, 56]
     })
     st.dataframe(sample_data)
