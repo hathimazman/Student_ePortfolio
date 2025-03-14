@@ -79,7 +79,7 @@ def render_intervention_tab(results, all_course_names, section_separator, get_as
                 elif 'OSPE' in area:
                     interventions.append("Practical skills lab sessions")
                 elif 'PAM' in area:
-                    interventions.append("Project assistance and methodology guidance")
+                    interventions.append("Revisit End of Module Assessment")
                 elif 'PBL' in area:
                     interventions.append("Problem-based learning support group")
                 else:
