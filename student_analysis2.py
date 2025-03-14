@@ -7,10 +7,12 @@ from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from utils.mark_calculator import calculate_weighted_final_marks
-
 # Assessment component structure:
 # Original structure:
+# 1. total (50%) = OBA (25%) + EMI (25%)
+# 2. total essay (50%) = (Essay 1 + Essay 2 + Essay 3)/30*50
+# 3. theory (60%) = (total + total essay) * 0.6
+# 4. Final Mark = theory + OSPE + PAM + PBL
 
 # Load the dataset and calculate derived columns
 def load_data(file_path=None, data_df=None, course_name=None):
@@ -496,8 +498,7 @@ def generate_student_portfolio(data, student_id):
     return portfolio
 
 # Main function to run all analyses
-def analyze_student_performance(file_path=None, data_df=None, course_name=None, 
-                              component_weights=None, component_max_scores=None):
+def analyze_student_performance(file_path=None, data_df=None, course_name=None):
     """
     Run complete analysis on student performance data.
     
@@ -505,7 +506,6 @@ def analyze_student_performance(file_path=None, data_df=None, course_name=None,
     - file_path: Path to CSV file (if loading from file)
     - data_df: Pandas DataFrame (if data is already loaded)
     - course_name: Name of the course for this data
-    - component_weights: Dictionary of component weights (e.g., {'MCQ': 30, 'MEQ': 25, ...})
     
     Returns:
     - Dictionary containing all analysis results
@@ -513,13 +513,6 @@ def analyze_student_performance(file_path=None, data_df=None, course_name=None,
     # Load data
     data = load_data(file_path=file_path, data_df=data_df, course_name=course_name)
     print(f"Loaded dataset with {len(data)} students and {len(data.columns)} columns")
-    
-    # Apply custom weights and max scores if provided
-    if component_weights or component_max_scores:
-        data = calculate_weighted_final_marks(data, weights=component_weights, max_scores=component_max_scores)
-        # Optionally replace the original Final Mark with the calculated one
-        # Uncomment the next line if you want to use calculated marks for all analyses
-        # data['Final Mark'] = data['Calculated_Final_Mark']
     
     # 1. Identify students needing intervention
     intervention_results, threshold = identify_students_needing_intervention(data)
@@ -534,42 +527,19 @@ def analyze_student_performance(file_path=None, data_df=None, course_name=None,
     print("Completed component importance analysis")
     
     # Analyze the assessment structure and its impact
-    # Get assessment components
-    exclude_cols = ['Student_ID', 'Final Mark', 'Course', 'Cluster', 'Calculated_Final_Mark']
-    assessment_cols = [col for col in data.columns if col not in exclude_cols and not col.startswith('Essay')]
-    
-    # Create component weights dictionary
-    component_weights_dict = {}
-    if component_weights:
-        # Use provided weights
-        for component in assessment_cols:
-            if component in component_weights:
-                component_weights_dict[component] = f"{component_weights[component]}% of final mark"
-            else:
-                component_weights_dict[component] = "Weight not specified"
-    else:
-        # Use equal weights
-        equal_weight = 100 / len(assessment_cols) if assessment_cols else 0
-        for component in assessment_cols:
-            component_weights_dict[component] = f"Approximately {equal_weight:.1f}% of final mark"
-    
-    # Create formula string
-    formula_parts = []
-    for component in assessment_cols:
-        weight = component_weights.get(component, 100/len(assessment_cols)) if component_weights else 100/len(assessment_cols)
-        max_score = component_max_scores.get(component, "raw score") if component_max_scores else "raw score"
-        formula_parts.append(f"({component}/{max_score})*{weight:.1f}%")
-    
-    formula = "Final Mark = " + " + ".join(formula_parts) if formula_parts else "No components found"
-    
     assessment_structure = {
-        'component_weights': component_weights_dict,
-        'component_max_scores': component_max_scores if component_max_scores else "Default max scores used",
+        'component_weights': {
+            'MCQ': 'Approximately 20% of final mark',
+            'MEQ': 'Approximately 20% of final mark',
+            'OSPE': 'Approximately 20% of final mark',
+            'PAM': 'Approximately 20% of final mark',
+            'PBL': 'Approximately 20% of final mark'
+        },
         'pathway_analysis': {
             'all_components': {
                 'description': 'All components contribute directly to final mark',
                 'pathway': 'All components → Final Mark',
-                'formula': formula
+                'formula': 'Final Mark = MCQ + MEQ + OSPE + PAM + PBL'
             }
         }
     }
@@ -586,14 +556,15 @@ def analyze_student_performance(file_path=None, data_df=None, course_name=None,
     }
 
 # Multi-course analysis
-def analyze_multiple_courses(course_files, component_weights=None, component_max_scores=None):
+def analyze_multiple_courses(course_files):
     """
     Analyze multiple courses from different CSV files.
     
     Parameters:
     - course_files: Dictionary mapping course names to file paths
-    - component_weights: Dictionary of component weights (optional)
-    - component_max_scores: Dictionary of maximum possible scores for each component (optional)
+    
+    Returns:
+    - Dictionary containing results for each course and combined analysis
     """
     all_courses_data = pd.DataFrame()
     course_results = {}
@@ -601,13 +572,8 @@ def analyze_multiple_courses(course_files, component_weights=None, component_max
     # Analyze each course separately
     for course_name, file_path in course_files.items():
         print(f"Analyzing course: {course_name}")
-        # Run analysis for this course, passing along both parameters
-        results = analyze_student_performance(
-            file_path=file_path, 
-            course_name=course_name,
-            component_weights=component_weights,
-            component_max_scores=component_max_scores
-        )
+        # Run analysis for this course
+        results = analyze_student_performance(file_path=file_path, course_name=course_name)
         # Store the results
         course_results[course_name] = results
         # Append the data to all courses
@@ -616,12 +582,7 @@ def analyze_multiple_courses(course_files, component_weights=None, component_max
     # Generate combined analysis if we have multiple courses
     if len(course_files) > 1:
         print("Generating combined analysis for all courses")
-        combined_results = analyze_student_performance(
-            data_df=all_courses_data, 
-            course_name="All Courses",
-            component_weights=component_weights,
-            component_max_scores=component_max_scores
-        )
+        combined_results = analyze_student_performance(data_df=all_courses_data, course_name="All Courses")
         course_results["All Courses"] = combined_results
     
     return course_results

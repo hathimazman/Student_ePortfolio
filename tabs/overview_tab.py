@@ -62,33 +62,20 @@ def render_overview_tab(results, all_course_names, section_separator, get_assess
     with col1:
         # Sunburst chart showing component contributions - dynamically created
         if primary_cols:
-            # Define custom weights for each component (must sum to 100)
-            component_weights = {
-                'MCQ': 30,    # Adjusted from 20 to 30
-                'MEQ': 25,    # Adjusted from 20 to 25
-                'OSPE': 15,   # Adjusted from 20 to 15
-                'PAM': 20,    # Remains at 20
-                'PBL': 10     # Adjusted from 20 to 10
-            }
-
-            # Create data for the sunburst chart - with custom weights
+            # Create data for the sunburst chart
             sunburst_data = [{'id': 'Final Mark', 'parent': '', 'value': 100}]
-
-            # Add each component with custom weight
+            
+            # Calculate weight per component
+            component_weight = 100 / len(primary_cols) if len(primary_cols) > 0 else 0
+            
+            # Add each component
             for col in primary_cols:
-                if col in component_weights:
-                    weight = component_weights[col]
-                else:
-                    # For any components not explicitly defined, use a default weight
-                    # You could divide the remaining weight among undefined components
-                    weight = 5  # Default weight for any unspecified component
-                
                 sunburst_data.append({
                     'id': col, 
                     'parent': 'Final Mark', 
-                    'value': weight
+                    'value': component_weight
                 })
-                
+            
             # Create the sunburst chart
             fig = px.sunburst(
                 pd.DataFrame(sunburst_data),

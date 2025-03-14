@@ -74,7 +74,7 @@ with st.sidebar:
             del st.session_state.course_files[course_to_remove]
             st.success(f"Removed {course_to_remove}!")
             st.rerun()  # Rerun the app to update the sidebar
-
+    
     # Multiselect for courses to analyze
     if st.session_state.course_files:
         st.subheader("Select Courses to Analyze")
@@ -84,112 +84,19 @@ with st.sidebar:
             default=list(st.session_state.course_files.keys()),
             key="course_selector"
         )
-    
-    # In the sidebar of app.py, after course selection
-    if st.session_state.course_files:
-        st.sidebar.subheader("Assessment Component Weights")
         
-        # Initialize weights dictionary if not in session
-        if 'component_weights' not in st.session_state:
-            st.session_state.component_weights = {}
-        
-        # Get all unique component names across all uploaded files
-        all_components = set()
-        for course_name, file_path in st.session_state.course_files.items():
-            try:
-                # Read a few rows to extract column names
-                sample_data = pd.read_csv(file_path, nrows=5)
-                # Get assessment components
-                exclude_cols = ['Student_ID', 'Final Mark', 'Course', 'Cluster']
-                components = [col for col in sample_data.columns 
-                            if col not in exclude_cols and not col.startswith('Essay')]
-                all_components.update(components)
-            except Exception as e:
-                st.sidebar.warning(f"Could not read components from {course_name}: {e}")
-        
-        # Display weight sliders for each component
-        if all_components:
-            st.sidebar.write("Adjust component weights (should sum to 100):")
-            
-            # Calculate initial equal weights
-            equal_weight = 100 / len(all_components)
-            total_weight = 0
-            
-            # Create a slider for each component
-            for component in sorted(all_components):
-                # Get existing weight or use equal weight as default
-                current_weight = st.session_state.component_weights.get(component, equal_weight)
-                
-                # Create a slider for this component
-                new_weight = st.sidebar.number_input(
-                    f"{component} weight (%)",
-                    min_value=0.0,
-                    max_value=100.0,
-                    value=float(current_weight),
-                    step=0.5,
-                    key=f"weight_{component}"
-                )
-                
-                # Update the weight in session state
-                st.session_state.component_weights[component] = new_weight
-                total_weight += new_weight
-            
-            # Show the total weight
-            weight_color = "green" if 99.0 <= total_weight <= 101.0 else "red"
-            st.sidebar.markdown(f"**Total weight: <span style='color:{weight_color}'>{total_weight:.1f}%</span>**", 
-                            unsafe_allow_html=True)
-            
-            # Normalize weights button
-            if st.sidebar.button("Normalize Weights to 100%"):
-                if total_weight > 0:
-                    normalization_factor = 100 / total_weight
-                    for component in st.session_state.component_weights:
-                        st.session_state.component_weights[component] *= normalization_factor
-                    st.sidebar.success("Weights normalized to sum to 100%")
-                    st.rerun()
-        
-        # After component weight settings in the sidebar
-        if all_components:
-            st.sidebar.write("Component maximum possible scores:")
-            
-            # Initialize max scores dictionary if not in session
-            if 'max_scores' not in st.session_state:
-                st.session_state.max_scores = {}
-            
-            # Create an input field for each component's max score
-            for component in sorted(all_components):
-                # Get existing max score or use 100 as default
-                current_max = st.session_state.max_scores.get(component, 100)
-                
-                # Create an input for this component's max score
-                new_max = st.sidebar.number_input(
-                    f"{component} max score",
-                    min_value=1.0,
-                    max_value=1000.0,
-                    value=float(current_max),
-                    step=1.0,
-                    key=f"max_{component}"
-                )
-                
-                # Update the max score in session state
-                st.session_state.max_scores[component] = new_max
-
         # Button to run analysis
-        if st.sidebar.button("Analyze Selected Courses"):
+        if st.button("Analyze Selected Courses"):
             with st.spinner("Running analysis..."):
                 # Create a dictionary with only the selected courses
                 selected_files = {course: st.session_state.course_files[course] 
                                 for course in st.session_state.selected_courses}
                 
-                # Run the analysis for selected courses with custom weights
-                st.session_state.results = analyze_multiple_courses(
-                    selected_files,
-                    component_weights=st.session_state.component_weights,
-                    component_max_scores=st.session_state.max_scores
-                )
+                # Run the analysis for selected courses
+                st.session_state.results = analyze_multiple_courses(selected_files)
                 st.session_state.analyze_button_clicked = True
             
-            st.sidebar.success("Analysis complete!")
+            st.success("Analysis complete!")
     
     # Information section
     st.sidebar.markdown("---")

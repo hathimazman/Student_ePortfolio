@@ -49,26 +49,11 @@ def render_portfolio_tab(results, all_course_names, section_separator, get_asses
             # Create metrics for key performance indicators
             col1, col2, col3, col4 = st.columns(4)
             
-            # In the metrics section of the render_portfolio_tab function
             with col1:
                 st.metric(
-                    "Original Final Mark", 
+                    "Final Mark", 
                     f"{portfolio['student_data']['Final Mark']:.2f}"
                 )
-
-            with col2:
-                if 'Calculated_Final_Mark' in portfolio['student_data']:
-                    calculated_mark = portfolio['student_data']['Calculated_Final_Mark']
-                    difference = calculated_mark - portfolio['student_data']['Final Mark']
-                    
-                    st.metric(
-                        "Weighted Final Mark", 
-                        f"{calculated_mark:.2f}",
-                        delta=f"{difference:.2f}",
-                        delta_color="normal"
-                    )
-                else:
-                    st.metric("Weighted Final Mark", "N/A")
             
             with col2:
                 if 'Final Mark' in portfolio['percentiles']:
