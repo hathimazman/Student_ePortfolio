@@ -118,7 +118,7 @@ def identify_students_needing_intervention(data, percentile_threshold=25):
             elif 'OSPE' in area:
                 interventions.append("Practical skills lab sessions")
             elif 'PAM' in area:
-                interventions.append("Project assistance and methodology guidance")
+                interventions.append("Revisit End of Module Assessment")
             elif 'PBL' in area:
                 interventions.append("Problem-based learning support group")
             else:
