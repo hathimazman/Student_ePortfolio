@@ -148,7 +148,7 @@ else:
         
         Your CSV files should have the following structure:
         - Student_ID: Student identifier
-        - Assessment components (MCQ, MEQ, OSPE, PAM, PBL, etc.)
+        - Assessment components (MCQ, MEQ, OSPE, PAM, PBL, etc.) : Ensure that your marks have been calculated (divide by total marks, times by weightage)
         - Final Mark: Overall final mark
         
         The analysis will provide insights on student intervention needs, performance clusters, and assessment components.
