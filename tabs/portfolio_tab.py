@@ -35,7 +35,8 @@ def render_portfolio_tab(results, all_course_names, section_separator, get_asses
     student_id = st.selectbox(
         "Select a student:",
         options=course_results['student_ids'],
-        format_func=lambda x: f"{x}"
+        format_func=lambda x: f"{x}",
+        search=True
     )
     
     if student_id:
