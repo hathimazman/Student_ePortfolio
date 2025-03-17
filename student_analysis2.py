@@ -114,13 +114,13 @@ def identify_students_needing_intervention(data, percentile_threshold=25):
             if 'MCQ' in area:
                 interventions.append(f"Additional objective assessment practice in {area}")
             elif 'MEQ' in area:
-                interventions.append(f"Writing workshop focusing on {area}")
+                interventions.append(f"Focus on concept understanding on {area}")
             elif 'OSPE' in area:
-                interventions.append("Practical skills lab sessions")
+                interventions.append("Revise skills lab sessions")
             elif 'PAM' in area:
                 interventions.append("Revisit End of Module Assessment")
             elif 'PBL' in area:
-                interventions.append("Problem-based learning support group")
+                interventions.append("Problem-based learning study group")
             else:
                 interventions.append(f"Additional support for {area}")
         student['Recommended_Interventions'] = interventions
@@ -471,11 +471,11 @@ def generate_student_portfolio(data, student_id):
         if 'MCQ' in component:
             recommendations.append(f"Focus on improving objective assessment skills in {component}")
         elif 'MEQ' in component:
-            recommendations.append(f"Work on writing skills for {component}")
+            recommendations.append(f"Work on writing and elaborating skills for {component}")
         elif 'OSPE' in component:
-            recommendations.append("Practice practical skills through additional lab sessions")
+            recommendations.append("Revisit lab sessions or discuss more on missed details")
         elif 'PAM' in component:
-            recommendations.append("Strengthen project methodology and documentation")
+            recommendations.append("Revisit End of Module Assessment")
         elif 'PBL' in component:
             recommendations.append("Enhance problem-solving approach through group study")
         else:
