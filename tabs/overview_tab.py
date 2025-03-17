@@ -60,6 +60,9 @@ def render_overview_tab(results, all_course_names, section_separator, get_assess
     col1, col2 = st.columns(2)
     
     with col1:
+        # Debug statements
+        st.write("Primary columns:", primary_cols)
+        
         # Sunburst chart showing component contributions - dynamically created
         if primary_cols:
             # Create data for the sunburst chart
@@ -75,6 +78,9 @@ def render_overview_tab(results, all_course_names, section_separator, get_assess
                     'parent': 'Final Mark', 
                     'value': component_weight
                 })
+            
+            # Debug the sunburst data
+            st.write("Sunburst data:", sunburst_data)
             
             # Create the sunburst chart
             fig = px.sunburst(
