@@ -50,8 +50,8 @@ def render_portfolio_tab(results, all_course_names, section_separator, get_asses
     )
 
     if student_id:
-    # Your code to display student portfolio
-    st.write(f"Showing portfolio for student: {student_id}")
+        # Your code to display student portfolio
+        st.write(f"Showing portfolio for student: {student_id}")
         
     if student_id:
         # Generate portfolio for selected student
