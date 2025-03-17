@@ -31,23 +31,21 @@ def render_portfolio_tab(results, all_course_names, section_separator, get_asses
     
     section_separator()
     
-    # First, let's add a text input for searching
-    search_term = st.text_input("Search for a student:")
-    
-    # Filter the student options based on the search term
-    filtered_student_ids = course_results['student_ids']
-    if search_term:
-        filtered_student_ids = [
-            student_id for student_id in course_results['student_ids'] 
-            if search_term.lower() in str(student_id).lower()
-        ]
-    
-    # Then use the filtered list in the selectbox
-    student_id = st.selectbox(
+    # Use multiselect with max_selections=1 as an alternative
+    selected = st.multiselect(
         "Select a student:",
-        options=filtered_student_ids,
-        format_func=lambda x: f"{x}"
+        options=course_results['student_ids'],
+        format_func=lambda x: f"{x}",
+        max_selections=1
     )
+    
+    # Get the selected student ID (or None if nothing selected)
+    student_id = selected[0] if selected else None
+    
+    # Only proceed if a student is selected
+    if student_id:
+        # Your code to display student portfolio
+        st.write(f"Showing portfolio for student: {student_id}")
     
     if student_id:
         # Generate portfolio for selected student
