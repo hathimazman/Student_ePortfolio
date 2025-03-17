@@ -31,12 +31,22 @@ def render_portfolio_tab(results, all_course_names, section_separator, get_asses
     
     section_separator()
     
-    # Student selection dropdown
+    # First, let's add a text input for searching
+    search_term = st.text_input("Search for a student:")
+    
+    # Filter the student options based on the search term
+    filtered_student_ids = course_results['student_ids']
+    if search_term:
+        filtered_student_ids = [
+            student_id for student_id in course_results['student_ids'] 
+            if search_term.lower() in str(student_id).lower()
+        ]
+    
+    # Then use the filtered list in the selectbox
     student_id = st.selectbox(
         "Select a student:",
-        options=course_results['student_ids'],
-        format_func=lambda x: f"{x}",
-        search=True
+        options=filtered_student_ids,
+        format_func=lambda x: f"{x}"
     )
     
     if student_id:
