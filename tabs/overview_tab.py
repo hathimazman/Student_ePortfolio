@@ -35,6 +35,7 @@ def render_overview_tab(results, all_course_names, section_separator, get_assess
         st.subheader("Key Statistics")
         st.write(f"Total Students: {len(course_data)}")
         st.write(f"Average Final Mark: {course_data['Final Mark'].mean():.2f}")
+        st.write(f"Median Final Mark: {course_data['Final Mark'].median():.2f}")
         st.write(f"Highest Mark: {course_data['Final Mark'].max():.2f}")
         st.write(f"Lowest Mark: {course_data['Final Mark'].min():.2f}")
         st.write(f"Students Needing Intervention: {len(course_results['intervention_results'])}")
