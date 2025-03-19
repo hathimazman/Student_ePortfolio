@@ -52,7 +52,8 @@ def render_clusters_tab(results, all_course_names, section_separator, get_assess
     
     # Run clustering with updated cluster count
     if len(primary_cols) >= 2:  # Need at least 2 components for clustering
-        new_clusters = discover_student_groupings(course_data, n_clusters=n_clusters, threshold=threshold)
+        numeric_cols = [col for col in primary_cols if col != 'Risk Status']
+        new_clusters = discover_student_groupings(course_data, n_clusters, numeric_cols)
         
         # Cluster visualizations
         col1, col2 = st.columns(2)
