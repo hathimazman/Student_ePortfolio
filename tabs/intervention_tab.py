@@ -122,7 +122,7 @@ def render_intervention_tab(results, all_course_names, section_separator, get_as
                 color=course_data['Final Mark'] <= threshold,
                 size="Final Mark",
                 color_discrete_sequence=['lightgrey', 'red'],
-                title=f"At-Risk Students (Red) by {scatter_cols[0]} vs {scatter_cols[1]} Performance",
+                title=f"At-Risk Students by {scatter_cols[0]} vs {scatter_cols[1]} Performance",
                 labels={"color": "At Risk"}
             )
             st.plotly_chart(fig, use_container_width=True)
