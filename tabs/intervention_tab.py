@@ -117,7 +117,7 @@ def render_intervention_tab(results, all_course_names, section_separator, get_as
         if len(scatter_cols) == 2:
             # Create explicit category labels for at-risk status
             course_data['Risk Status'] = ['At Risk' if mark <= threshold else 'Not At Risk' 
-                                          for mark in course_data['Final Mark']]
+                                         for mark in course_data['Final Mark']]
             
             # Scatter plot using the first two components
             fig = px.scatter(
