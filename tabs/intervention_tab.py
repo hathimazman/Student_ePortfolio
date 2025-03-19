@@ -115,19 +115,15 @@ def render_intervention_tab(results, all_course_names, section_separator, get_as
     
     with col1:
         if len(scatter_cols) == 2:
-            # Create explicit category labels for at-risk status
-            course_data['Risk Status'] = ['At Risk' if mark <= threshold else 'Not At Risk' 
-                                         for mark in course_data['Final Mark']]
-            
             # Scatter plot using the first two components
             fig = px.scatter(
                 course_data,
                 x=scatter_cols[0], y=scatter_cols[1],
-                color='Risk Status',
+                color=course_data['Final Mark'] <= threshold,
                 size="Final Mark",
-                color_discrete_sequence=['red', 'lightgrey'],  # Now: red=At Risk, lightgrey=Not At Risk
+                color_discrete_sequence=['lightgrey', 'red'],
                 title=f"At-Risk Students (Red) by {scatter_cols[0]} vs {scatter_cols[1]} Performance",
-                category_orders={"Risk Status": ["At Risk", "Not At Risk"]}  # Ensure consistent ordering
+                labels={"color": "At Risk"}
             )
             st.plotly_chart(fig, use_container_width=True)
         else:
