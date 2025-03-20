@@ -98,7 +98,7 @@ def render_overview_tab(results, all_course_names, section_separator, get_assess
                 comparison_data.append({
                     'Course': course_name,
                     'Average Mark': course_data['Final Mark'].mean(),
-                    'Pass Rate (%)': (course_data['Final Mark'] >= 60).mean() * 100,
+                    'Pass Rate (%)': (course_data['Final Mark'] >= 50).mean() * 100,
                     'Student Count': len(course_data)
                 })
         
