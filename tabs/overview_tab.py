@@ -61,34 +61,12 @@ def render_overview_tab(results, all_course_names, section_separator, get_assess
     col1, col2 = st.columns(2)
     
     with col1:
-        # Sunburst chart showing component contributions - dynamically created
-        if primary_cols:
-            # Create data for the sunburst chart
-            sunburst_data = [{'id': 'Final Mark', 'parent': '', 'value': 100}]
-            
-            # Calculate weight per component
-            component_weight = 100 / len(primary_cols) if len(primary_cols) > 0 else 0
-            
-            # Add each component
-            for col in primary_cols:
-                sunburst_data.append({
-                    'id': col, 
-                    'parent': 'Final Mark', 
-                    'value': component_weight
-                })
-            
-            # Create the sunburst chart
-            fig = px.sunburst(
-                pd.DataFrame(sunburst_data),
-                ids='id',
-                parents='parent',
-                values='value',
-                title="Assessment Component Contribution",
-                branchvalues="total"
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.warning("No assessment components detected for visualization")
+        st.subheader("Component Statistics")
+        st.write(f"Average MCQ: {course_data['MCQ'].mean():.2f}")
+        st.write(f"Average MEQ: {course_data['MEQ'].median():.2f}")
+        st.write(f"Average OSPE: {course_data['OSPE'].max():.2f}")
+        st.write(f"Average PAM: {course_data['PAM'].min():.2f}")
+        st.write(f"Average PBL: {course_data['PBL'].min():.2f}")
     
     with col2:
         # Component Correlation Heatmap - dynamically use available components
