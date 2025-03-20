@@ -62,11 +62,26 @@ def render_overview_tab(results, all_course_names, section_separator, get_assess
     
     with col1:
         st.subheader("Component Statistics")
-        st.write(f"Average MCQ: {course_data['MCQ'].mean():.2f}")
-        st.write(f"Average MEQ: {course_data['MEQ'].mean():.2f}")
-        st.write(f"Average OSPE: {course_data['OSPE'].mean():.2f}")
-        st.write(f"Average PAM: {course_data['PAM'].mean():.2f}")
-        st.write(f"Average PBL: {course_data['PBL'].mean():.2f}")
+        try:
+            st.write(f"Average MCQ: {course_data['MCQ'].mean():.2f}")
+        except KeyError:
+            st.write("Average MCQ: N/A")
+        try:
+            st.write(f"Average MEQ: {course_data['MEQ'].mean():.2f}")
+        except KeyError:
+            st.write("Average MEQ: N/A")
+        try:
+            st.write(f"Average OSPE: {course_data['OSPE'].mean():.2f}")
+        except KeyError:
+            st.write("Average OSPE: N/A")
+        try:
+            st.write(f"Average PAM: {course_data['PAM'].mean():.2f}")
+        except KeyError:
+            st.write("Average PAM: N/A")
+        try:
+            st.write(f"Average PBL: {course_data['PBL'].mean():.2f}")
+        except KeyError:
+            st.write("Average PBL: N/A")
     
     with col2:
         # Component Correlation Heatmap - dynamically use available components
