@@ -63,10 +63,10 @@ def render_overview_tab(results, all_course_names, section_separator, get_assess
     with col1:
         st.subheader("Component Statistics")
         st.write(f"Average MCQ: {course_data['MCQ'].mean():.2f}")
-        st.write(f"Average MEQ: {course_data['MEQ'].median():.2f}")
-        st.write(f"Average OSPE: {course_data['OSPE'].max():.2f}")
-        st.write(f"Average PAM: {course_data['PAM'].min():.2f}")
-        st.write(f"Average PBL: {course_data['PBL'].min():.2f}")
+        st.write(f"Average MEQ: {course_data['MEQ'].mean():.2f}")
+        st.write(f"Average OSPE: {course_data['OSPE'].mean():.2f}")
+        st.write(f"Average PAM: {course_data['PAM'].mean():.2f}")
+        st.write(f"Average PBL: {course_data['PBL'].mean():.2f}")
     
     with col2:
         # Component Correlation Heatmap - dynamically use available components
