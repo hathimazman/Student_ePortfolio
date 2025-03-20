@@ -122,7 +122,7 @@ def render_overview_tab(results, all_course_names, section_separator, get_assess
                 comparison_df,
                 x='Course',
                 y='Pass Rate (%)',
-                title="Pass Rate by Course (≥60)",
+                title="Pass Rate by Course (≥50)",
                 color='Course'
             )
             st.plotly_chart(fig, use_container_width=True)
