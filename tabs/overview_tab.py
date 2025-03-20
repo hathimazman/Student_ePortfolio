@@ -84,21 +84,72 @@ def render_overview_tab(results, all_course_names, section_separator, get_assess
             st.write("Average PBL: N/A")
     
     with col2:
-        # Component Correlation Heatmap - dynamically use available components
-        if primary_cols:
-            # Include Final Mark in correlation matrix
-            corr_cols = primary_cols + ['Final Mark']
-            
-            # Create correlation matrix
-            fig = px.imshow(
-                course_data[corr_cols].corr(),
-                title=f"Component Correlation Matrix - {selected_course}",
-                color_continuous_scale='RdBu_r',
-                zmin=-1, zmax=1
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.warning("No assessment components detected for correlation matrix")
+        # Create total number of students in each Grade
+        st.subheader("Student Grade Distribution")
+        
+        # Define grade boundaries
+        grade_boundaries = {
+            'A': 80,
+            'A-': 75,
+            'B+': 70,
+            'B': 65,
+            'B-': 60,
+            'C+': 55,
+            'C': 50,
+            'C-': 45,
+            'D+': 40,
+            'D': 35,
+            'E': 0
+        }
+        
+        # Create a function to assign grades based on final marks
+        def assign_grade(mark):
+            for grade, min_mark in grade_boundaries.items():
+                if mark >= min_mark:
+                    return grade
+            return 'E'  # Default if no other condition is met
+        
+        # Apply the function to create a new grade column
+        grade_data = course_results['data'].copy()
+        grade_data['Grade'] = grade_data['Final Mark'].apply(assign_grade)
+        
+        # Count students in each grade
+        grade_counts = grade_data['Grade'].value_counts().reset_index()
+        grade_counts.columns = ['Grade', 'Count']
+        
+        # Define grade order for sorting (reversed from your dictionary to get A at the top)
+        grade_order = list(grade_boundaries.keys())
+        
+        # Map grades to a custom sort order using a dictionary
+        grade_sort_map = {grade: i for i, grade in enumerate(grade_order)}
+        
+        # Sort the dataframe according to the custom order
+        grade_counts['Sort_Order'] = grade_counts['Grade'].map(grade_sort_map)
+        grade_counts = grade_counts.sort_values('Sort_Order')
+        grade_counts = grade_counts.drop('Sort_Order', axis=1)
+        
+        # Create a color map for grades
+        colors = px.colors.qualitative.Bold
+        color_discrete_map = {grade: colors[i % len(colors)] for i, grade in enumerate(grade_order)}
+        
+        # Create a bar chart
+        fig = px.bar(
+            grade_counts,
+            x='Grade', 
+            y='Count',
+            title=f"Student Grade Distribution - {selected_course}",
+            color='Grade',
+            color_discrete_map=color_discrete_map,
+            text='Count',
+            category_orders={"Grade": grade_order}
+        )
+        
+        fig.update_traces(textposition='outside')
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Display the data in a table below the chart
+        st.write("Number of students in each grade:")
+        st.dataframe(grade_counts, use_container_width=True)
     
     # Course comparison if we have multiple courses
     if len([k for k in results.keys() if k != "All Courses"]) > 1:

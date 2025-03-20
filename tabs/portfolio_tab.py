@@ -3,6 +3,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 from student_analysis2 import generate_student_portfolio
+from utils.grade_calculator import grade_calculate
 
 def render_portfolio_tab(results, all_course_names, section_separator, get_assessment_components):
     """
@@ -62,7 +63,7 @@ def render_portfolio_tab(results, all_course_names, section_separator, get_asses
             st.subheader("Overall Performance")
             
             # Create metrics for key performance indicators
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3, col4, col5 = st.columns(5)
             
             with col1:
                 st.metric(
@@ -93,6 +94,15 @@ def render_portfolio_tab(results, all_course_names, section_separator, get_asses
                     st.metric("Cluster", f"{int(portfolio['student_data']['Cluster'])}")
                 else:
                     st.metric("Cluster", "N/A")
+            
+            with col5:
+                if 'Final Mark' in portfolio['student_data']:
+                    st.metric(
+                        "Grade Status",
+                        grade_calculate(portfolio['student_data']['Final Mark'])
+                    )
+                else:
+                    st.metric("Grade Status", "N/A")
             
             section_separator()
             
