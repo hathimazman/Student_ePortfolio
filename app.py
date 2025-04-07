@@ -138,7 +138,7 @@ else:
     # Display initial instructions if no analysis has been run
     st.info(
         """
-        ### Welcome to the Student Performance Analysis Dashboard!
+        ### Welcome to the MED-AI (Medical Education Dashboard with Artificial Intelligence)!
         
         To get started:
         1. Use the sidebar to upload CSV files containing your course data
