@@ -30,7 +30,7 @@ if 'analyze_button_clicked' not in st.session_state:
     st.session_state.analyze_button_clicked = False
 
 # App title
-st.title("Student Performance Analysis Dashboard")
+st.title("Medical Education Dashboard with Artificial Intelligence [MED-AI]")
 
 # Sidebar for file uploads and course selection
 with st.sidebar:
