@@ -30,7 +30,7 @@ if 'analyze_button_clicked' not in st.session_state:
     st.session_state.analyze_button_clicked = False
 
 # App title
-st.title("Student Performance Analysis Dashboard")
+st.title("Medical Education Dashboard with Artificial Intelligence [MED-AI]")
 
 # Sidebar for file uploads and course selection
 with st.sidebar:
@@ -138,7 +138,7 @@ else:
     # Display initial instructions if no analysis has been run
     st.info(
         """
-        ### Welcome to the Student Performance Analysis Dashboard!
+        ### Welcome to the MED-AI (Medical Education Dashboard with Artificial Intelligence)!
         
         To get started:
         1. Use the sidebar to upload CSV files containing your course data
